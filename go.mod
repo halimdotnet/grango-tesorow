@@ -3,6 +3,7 @@ module github.com/halimdotnet/grango-tesorow
 go 1.25.3
 
 require (
+	github.com/jmoiron/sqlx v1.4.0
 	github.com/joho/godotenv v1.5.1
 	github.com/spf13/viper v1.21.0
 	go.uber.org/zap v1.27.1
