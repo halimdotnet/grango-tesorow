@@ -1,0 +1,42 @@
+server:
+  port: 8081
+  host: localhost
+  read_timeout: 15
+  write_timeout: 15
+  idle_timeout: 60
+  shutdown_timeout: 10
+
+postgres:
+  host: localhost
+  port: 5432
+  user: postgres
+  password: admin
+  dbname: accounting
+  ssl_mode: disable
+  max_open_conns: 10
+  max_idle_conns: 5
+  conn_max_lifetime: 1h
+  conn_max_idle_time: 1h
+  connect_timeout: 30
+
+redis:
+  host: localhost
+  port: 6379
+  password:
+
+kafka:
+  host: localhost
+  port: 9092
+  connect_timeout: 10s
+  read_timeout: 30s
+  write_timeout: 10s
+
+logger:
+  level: debug
+  enable_trace: false
+  enable_caller: false
+
+auth:
+  secret: "blue_@12xy!"
+  expiration_hours: 12
+  refresh_expiration_hours: 720

@@ -1,0 +1,9 @@
+swagger: "2.0"
+info:
+  contact:
+    name: "halimdotnet"
+    url: "https://github.com/halimdotnet"
+  description: "User Module API"
+  title: User Module API
+  version: 1.0.0
+paths:
