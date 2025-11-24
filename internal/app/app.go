@@ -11,7 +11,8 @@ import (
 type App struct {
 	Config *config.Config
 	Logger logger.Logger
-	Server *hxxp.Server
+	Server hxxp.Server
+	Router *hxxp.Router
 }
 
 func NewApp() *App {
@@ -25,8 +26,6 @@ func NewApp() *App {
 		Config: cfg,
 	}
 
-	//spew.Dump(application.Config.Logger)
-
 	return application
 }
 
@@ -34,14 +33,17 @@ func (a *App) Run() {
 	a.providers()
 	a.modules()
 
-	if err := a.Server.Run(); err != nil {
+	if err := a.Server.RunServer(); err != nil {
 		log.Fatal(err)
 	}
+
 }
 
 func (a *App) providers() {
 	a.Logger = logger.New(a.Config.Logger, a.Config.Environment)
-	a.Server = hxxp.New(a.Config.Server, a.Logger, a.Config.Environment)
+
+	a.Server = hxxp.NewServer(a.Config.Server, a.Logger)
+	a.Router = a.Server.BuildRouter()
 }
 
 func (a *App) modules() {

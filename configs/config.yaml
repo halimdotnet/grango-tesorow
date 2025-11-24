@@ -1,10 +1,11 @@
+app:
+  debug: false
+  version: 1.0.0
+  name: grango-tesorow
 server:
   port: 8081
   host: localhost
-  read_timeout: 15
-  write_timeout: 15
-  idle_timeout: 60
-  shutdown_timeout: 10
+  base_path:
 
 postgres:
   host: localhost
