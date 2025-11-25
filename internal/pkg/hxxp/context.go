@@ -29,7 +29,7 @@ func (c *Context) Bind(v interface{}) error {
 	if err := dec.Decode(v); err != nil {
 		var maxBytesErr *http.MaxBytesError
 		if errors.As(err, &maxBytesErr) {
-			return fmt.Errorf("invalid request size")
+			return fmt.Errorf("request payload exceeds allowed size")
 		}
 
 		var syntaxErr *json.SyntaxError

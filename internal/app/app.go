@@ -34,12 +34,19 @@ func (a *App) Run() {
 	a.providers()
 	a.modules()
 
+	// test route
 	a.Router.Get("/", func(ctx *hxxp.Context) {
 		ctx.Response(http.StatusOK, hxxp.Response{
 			Error:   false,
 			Message: "Hello World!",
 		})
 	})
+
+	defer func() {
+		if err := a.Logger.Sync(); err != nil {
+			log.Printf("Failed to sync logger on shutdown: %v", err)
+		}
+	}()
 
 	if err := a.Server.RunServer(); err != nil {
 		log.Fatal(err)

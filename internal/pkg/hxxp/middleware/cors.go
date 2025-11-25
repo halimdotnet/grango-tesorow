@@ -7,16 +7,15 @@ import (
 )
 
 func CORS(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		opts := cors.Options{
-			AllowedOrigins:   []string{"*"},
-			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
-			AllowedHeaders:   []string{"*"},
-			ExposedHeaders:   []string{"*"},
-			AllowCredentials: true,
-			MaxAge:           360,
-		}
-		cors.Handler(opts)
-		next.ServeHTTP(w, r)
-	})
+	opts := cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"*"},
+		ExposedHeaders:   []string{"*"},
+		AllowCredentials: true,
+		MaxAge:           360,
+	}
+
+	corsHandler := cors.Handler(opts)
+	return corsHandler(next)
 }

@@ -32,12 +32,27 @@ func RateLimiter(next http.Handler) http.Handler {
 		context, err := ipLimiter.Get(r.Context(), ip)
 		if err != nil {
 			log.Printf(
-				"Rate limiter context got error from: %v, %s on %s",
+				"Rate limiter error from IP: %v, %s on %s",
 				err,
 				ip,
 				r.URL,
 			)
-			next.ServeHTTP(w, r)
+
+			w.Header().Set("Content-Type", "application/json; charset=utf-8")
+			w.WriteHeader(http.StatusServiceUnavailable)
+
+			if err = json.NewEncoder(w).Encode(map[string]interface{}{
+				"error":   true,
+				"message": "Service temporarily unavailable",
+			}); err != nil {
+				log.Printf(
+					"Failed to encode rate limiter error response for IP %s: %v",
+					ip,
+					err,
+				)
+			}
+
+			return
 		}
 
 		w.Header().Set(

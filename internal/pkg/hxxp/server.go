@@ -53,8 +53,16 @@ func (s *server) RunServer() error {
 		defer cancel()
 
 		if err := s.Shutdown(ctx); err != nil {
+			if errors.Is(err, context.DeadlineExceeded) {
+				log.Printf(
+					"Server shutdown timeout after %v - forcing shutdown",
+					constants.ShutdownTimeout,
+				)
+				return fmt.Errorf("server shutdown timeout: forced to stop")
+			}
 			return fmt.Errorf("server forced to shutdown: %w", err)
 		}
+
 		log.Println("Server gracefully stopped")
 
 		return nil
@@ -90,8 +98,9 @@ func (s *server) BuildRouter() *Router {
 	s.router = &Router{
 		chi: chi.NewRouter(),
 	}
-	
+
 	s.router.Use(middleware.SetupHeader)
+	s.router.Use(middleware.CORS)
 	s.router.Use(middleware.RateLimiter)
 
 	s.router.chi.NotFound(s.router.notFound)

@@ -99,11 +99,5 @@ func (z *zapLogger) Fatalf(str string, args ...interface{}) {
 }
 
 func (z *zapLogger) Sync() error {
-	go func() {
-		err := z.sugaredLogger.Sync()
-		if err != nil {
-			z.logger.Error("error syncing zap logger", zap.Error(err))
-		}
-	}()
 	return z.sugaredLogger.Sync()
 }
