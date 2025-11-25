@@ -2,6 +2,7 @@ package app
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/halimdotnet/grango-tesorow/internal/pkg/config"
 	"github.com/halimdotnet/grango-tesorow/internal/pkg/hxxp"
@@ -32,6 +33,13 @@ func NewApp() *App {
 func (a *App) Run() {
 	a.providers()
 	a.modules()
+
+	a.Router.Get("/", func(ctx *hxxp.Context) {
+		ctx.Response(http.StatusOK, hxxp.Response{
+			Error:   false,
+			Message: "Hello World!",
+		})
+	})
 
 	if err := a.Server.RunServer(); err != nil {
 		log.Fatal(err)

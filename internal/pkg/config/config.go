@@ -33,6 +33,14 @@ func BindAllConfig() (*Config, error) {
 	return cfg, nil
 }
 
+func BindLoggerConfig(env string) (*logger.Config, error) {
+	return BindKey[*logger.Config]("logger", env)
+}
+
+func BindServerConfig(env string) (*hxxp.Config, error) {
+	return BindKey[*hxxp.Config]("server", env)
+}
+
 func LoadEnvironment() (string, error) {
 	err := godotenv.Load()
 	if err != nil {
@@ -50,7 +58,7 @@ func BindKey[T any](key string, env string) (T, error) {
 	var result T
 
 	viper.SetConfigName(fmt.Sprintf("config.%s", env))
-	viper.AddConfigPath("./configs")
+	viper.AddConfigPath(constants.ConfigPath)
 	viper.SetConfigType("yaml")
 
 	if err := viper.ReadInConfig(); err != nil {

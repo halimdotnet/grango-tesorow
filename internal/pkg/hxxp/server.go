@@ -12,6 +12,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/halimdotnet/grango-tesorow/internal/pkg/constants"
+	"github.com/halimdotnet/grango-tesorow/internal/pkg/hxxp/middleware"
 	"github.com/halimdotnet/grango-tesorow/internal/pkg/logger"
 )
 
@@ -89,6 +90,12 @@ func (s *server) BuildRouter() *Router {
 	s.router = &Router{
 		chi: chi.NewRouter(),
 	}
+	
+	s.router.Use(middleware.SetupHeader)
+	s.router.Use(middleware.RateLimiter)
+
+	s.router.chi.NotFound(s.router.notFound)
+	s.router.chi.MethodNotAllowed(s.router.methodNotAllowed)
 
 	return s.router
 }

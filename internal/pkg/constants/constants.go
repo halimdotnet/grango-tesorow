@@ -11,11 +11,16 @@ const (
 	EnvDevelopment = "development"
 )
 
-// HTTP server
+// HTTP server and router
 const (
-	ReadTimeout     = 15 * time.Second
-	WriteTimeout    = 15 * time.Second
-	IdleTimeout     = 60 * time.Second
-	ShutdownTimeout = 30 * time.Second
-	MaxHeaderBytes  = 1 << 20
+	ReadTimeout         = 15 * time.Second
+	WriteTimeout        = 15 * time.Second
+	IdleTimeout         = 60 * time.Second
+	ShutdownTimeout     = 30 * time.Second
+	MaxHeaderBytes      = 1 << 20
+	MaxRequestBodyBytes = 1 << 20
+	MaxUploadSize       = 3 << 20
+
+	RateLimitAttempt = 5
+	RatelimitPeriod  = 60 * time.Minute
 )
