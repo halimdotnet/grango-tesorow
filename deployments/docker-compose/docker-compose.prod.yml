@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: tesorow_postgres_prod
+    environment:
+      POSTGRES_USER: tesorow_prod
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: tesorow_prod
+      POSTGRES_SHARED_BUFFERS: 512MB
+      POSTGRES_EFFECTIVE_CACHE_SIZE: 2GB
+      POSTGRES_MAX_CONNECTIONS: 200
+      POSTGRES_WORK_MEM: 16MB
+    expose:
+      - "5432"
+    volumes:
+      - postgres_prod_data:/var/lib/postgresql/data
+      - ./backups/prod:/backups
+    networks:
+      - tesorow_prod_network
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tesorow_prod"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+
+volumes:
+  postgres_prod_data:
+    driver: local
+
+networks:
+  tesorow_prod_network:
+    driver: bridge

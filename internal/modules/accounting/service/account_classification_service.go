@@ -64,20 +64,20 @@ func (s *accountClassificationService) FindCategory(ctx context.Context, code st
 		return nil, err
 	}
 
-	var result *dto.AccountCategoryResponse
-
-	if category != nil {
-		result.ID = category.ID
-		result.Code = category.Code
-		result.Name = category.Name
-		result.Classification = category.Classification
-		result.IsActive = category.IsActive
-		result.AccountTypeCode = category.AccountTypeCode
-		result.AccountTypeName = category.AccountTypeName
-		result.AccountTypeDCPattern = category.AccountTypeDCPattern
+	if category == nil {
+		return nil, nil
 	}
 
-	return result, nil
+	return &dto.AccountCategoryResponse{
+		ID:                   category.ID,
+		Code:                 category.Code,
+		Name:                 category.Name,
+		Classification:       category.Classification,
+		IsActive:             category.IsActive,
+		AccountTypeCode:      category.AccountTypeCode,
+		AccountTypeName:      category.AccountTypeName,
+		AccountTypeDCPattern: category.AccountTypeDCPattern,
+	}, nil
 }
 
 type AccountClassificationService interface {

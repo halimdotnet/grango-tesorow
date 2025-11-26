@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: tesorow_postgres_staging
+    environment:
+      POSTGRES_USER: tesorow_staging
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: tesorow_staging
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_staging_data:/var/lib/postgresql/data
+    networks:
+      - tesorow_staging_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tesorow_staging"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_staging_data:
+
+networks:
+  tesorow_staging_network:
+    driver: bridge

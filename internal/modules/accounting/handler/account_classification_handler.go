@@ -15,7 +15,7 @@ type AccountClassificationHandler struct {
 
 func (h *AccountClassificationHandler) RegisterRoutes() {
 	h.route.Group("/api/v1/accounting", func(accounting *hxxp.Router) {
-		h.route.Use(middleware.BearerAuth)
+		accounting.Use(middleware.BearerAuth)
 
 		accounting.Get("/account-type", h.listAccountType)
 

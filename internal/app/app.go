@@ -46,9 +46,7 @@ func (a *App) Run() {
 
 func (a *App) cleanup() {
 	if a.Pg != nil && a.Pg.Sqlx != nil {
-		if err := a.Pg.Sqlx.Close(); err != nil {
-			log.Printf("Failed to close PostgreSQL connection: %v", err)
-		}
+		defer a.Pg.Sqlx.Close()
 	}
 
 	if a.Logger != nil {

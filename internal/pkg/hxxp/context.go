@@ -1,6 +1,7 @@
 package hxxp
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
@@ -49,12 +50,20 @@ func (c *Context) Response(statusCode int, resp Response) {
 		statusCode = http.StatusOK
 	}
 
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(resp); err != nil {
+		c.Writer.Header().Set("Content-Type", "application/json; charset=utf-8")
+		c.Writer.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(c.Writer).Encode(Response{
+			Error:   true,
+			Message: "Failed to encode response",
+		})
+		return
+	}
+
 	c.Writer.Header().Set("Content-Type", "application/json; charset=utf-8")
 	c.Writer.WriteHeader(statusCode)
-
-	if err := json.NewEncoder(c.Writer).Encode(resp); err != nil {
-		http.Error(c.Writer, err.Error(), http.StatusInternalServerError)
-	}
+	buf.WriteTo(c.Writer)
 }
 
 func (c *Context) Query(key string) string {
