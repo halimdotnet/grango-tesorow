@@ -4,14 +4,15 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"fmt"
 
 	"github.com/halimdotnet/grango-tesorow/internal/modules/accounting/domain"
+	"github.com/halimdotnet/grango-tesorow/internal/pkg/logger"
 	pgx "github.com/halimdotnet/grango-tesorow/internal/pkg/postgres"
 )
 
 type accountTypeRepository struct {
-	db *pgx.DB
+	db  *pgx.DB
+	log logger.Logger
 }
 
 type AccountTypeRepository interface {
@@ -19,8 +20,11 @@ type AccountTypeRepository interface {
 	Find(ctx context.Context, code string) (*domain.AccountType, error)
 }
 
-func NewAccountTypeRepository(db *pgx.DB) AccountTypeRepository {
-	return &accountTypeRepository{db: db}
+func NewAccountTypeRepository(db *pgx.DB, log logger.Logger) AccountTypeRepository {
+	return &accountTypeRepository{
+		db:  db,
+		log: log,
+	}
 }
 
 func (r *accountTypeRepository) List(ctx context.Context) ([]*domain.AccountType, error) {
@@ -35,7 +39,8 @@ func (r *accountTypeRepository) List(ctx context.Context) ([]*domain.AccountType
 
 	rows, err := r.db.Sqlx.QueryContext(ctx, query)
 	if err != nil {
-		return nil, fmt.Errorf("failed to query account type: %w", err)
+		r.log.Errorf("Failed to query account types: %v", err)
+		return nil, err
 	}
 	defer rows.Close()
 
@@ -55,13 +60,15 @@ func (r *accountTypeRepository) List(ctx context.Context) ([]*domain.AccountType
 			&accountType.DeletedBy,
 		)
 		if err != nil {
-			return nil, fmt.Errorf("failed to scan account type row: %w", err)
+			r.log.Errorf("Failed to scan account type: %v", err)
+			return nil, err
 		}
 		accountTypes = append(accountTypes, accountType)
 	}
 
 	if err = rows.Err(); err != nil {
-		return nil, fmt.Errorf("rows iteration error: %w", err)
+		r.log.Errorf("Account type row interation error: %v", err)
+		return nil, err
 	}
 
 	return accountTypes, nil
@@ -92,9 +99,12 @@ func (r *accountTypeRepository) Find(ctx context.Context, code string) (*domain.
 
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, fmt.Errorf("account type with code %s not found", code)
+			r.log.Errorf("Account type with code %q not found", code)
+			return nil, err
 		}
-		return nil, fmt.Errorf("failed to find account type: %w", err)
+
+		r.log.Errorf("Failed to find account type: %v", err)
+		return nil, err
 	}
 
 	return accountType, nil

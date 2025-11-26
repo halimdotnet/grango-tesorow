@@ -44,7 +44,7 @@ func Connect(cfg *Config) (*DB, error) {
 		cfg.DBName,
 		cfg.Password,
 		cfg.SSLMode,
-		cfg.ConnectTimeout,
+		int(cfg.ConnectTimeout.Seconds()),
 	)
 
 	db, err := sqlx.Connect("postgres", dataSourceName)
@@ -54,8 +54,8 @@ func Connect(cfg *Config) (*DB, error) {
 
 	db.SetMaxOpenConns(cfg.MaxOpenConns)
 	db.SetMaxIdleConns(cfg.MaxIdleConns)
-	db.SetConnMaxLifetime(cfg.ConnMaxLifetime * time.Minute)
-	db.SetConnMaxIdleTime(cfg.ConnMaxIdleTime * time.Minute)
+	db.SetConnMaxLifetime(cfg.ConnMaxLifetime)
+	db.SetConnMaxIdleTime(cfg.ConnMaxIdleTime)
 
 	if err = db.Ping(); err != nil {
 		return nil, fmt.Errorf("failed to connect database: %w", err)

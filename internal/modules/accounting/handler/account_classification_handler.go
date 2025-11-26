@@ -19,7 +19,11 @@ func NewAccountClassificationHandler(route *hxxp.Router, accountType service.Acc
 	}
 }
 
-func (h *AccountClassificationHandler) List(ctx hxxp.Context) {
+func (h *AccountClassificationHandler) RegisterRoutes() {
+	h.route.Get("/api/v1/accounting/account-type", h.listAccountType)
+}
+
+func (h *AccountClassificationHandler) listAccountType(ctx *hxxp.Context) {
 	list, err := h.accountType.ListAccountType(ctx.Ctx)
 	if err != nil {
 		ctx.Response(http.StatusInternalServerError, hxxp.Response{
@@ -30,7 +34,8 @@ func (h *AccountClassificationHandler) List(ctx hxxp.Context) {
 	}
 
 	ctx.Response(http.StatusOK, hxxp.Response{
-		Error: false,
-		Data:  list,
+		Error:   false,
+		Message: "Success",
+		Data:    list,
 	})
 }

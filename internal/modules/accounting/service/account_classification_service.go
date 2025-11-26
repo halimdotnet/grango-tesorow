@@ -2,30 +2,33 @@ package service
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/halimdotnet/grango-tesorow/internal/modules/accounting/dto"
 	"github.com/halimdotnet/grango-tesorow/internal/modules/accounting/repository"
+	"github.com/halimdotnet/grango-tesorow/internal/pkg/logger"
 )
 
 type accountClassificationService struct {
 	accountType repository.AccountTypeRepository
+	log         logger.Logger
 }
 
 type AccountClassificationService interface {
 	ListAccountType(ctx context.Context) ([]*dto.AccountTypeResponse, error)
 }
 
-func NewAccountClassificationService(accountType repository.AccountTypeRepository) AccountClassificationService {
+func NewAccountClassificationService(log logger.Logger, accountType repository.AccountTypeRepository) AccountClassificationService {
 	return &accountClassificationService{
+		log:         log,
 		accountType: accountType,
 	}
 }
 
-func (a *accountClassificationService) ListAccountType(ctx context.Context) ([]*dto.AccountTypeResponse, error) {
-	accountTypes, err := a.accountType.List(ctx)
+func (s *accountClassificationService) ListAccountType(ctx context.Context) ([]*dto.AccountTypeResponse, error) {
+	accountTypes, err := s.accountType.List(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("failed to list account types: %w", err)
+		s.log.Error(err)
+		return nil, err
 	}
 
 	var result []*dto.AccountTypeResponse

@@ -57,7 +57,3 @@ func (a *App) Run() {
 	}
 
 }
-
-func (a *App) modules() {
-	// Do something
-}

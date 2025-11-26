@@ -21,6 +21,6 @@ const (
 	MaxRequestBodyBytes = 1 << 20
 	MaxUploadSize       = 3 << 20
 
-	RateLimitAttempt = 5
+	RateLimitAttempt = 500
 	RatelimitPeriod  = 60 * time.Minute
 )

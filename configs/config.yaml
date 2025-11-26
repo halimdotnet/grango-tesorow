@@ -10,15 +10,15 @@ server:
 postgres:
   host: localhost
   port: 5432
-  user: postgres
-  password: admin
-  dbname: accounting
+  user: tesorow
+  password: tesorow123
+  dbname: tesorow_dev
   ssl_mode: disable
   max_open_conns: 10
   max_idle_conns: 5
   conn_max_lifetime: 1h
   conn_max_idle_time: 1h
-  connect_timeout: 30
+  connect_timeout: 30s
 
 redis:
   host: localhost
