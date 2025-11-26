@@ -6,24 +6,23 @@ import (
 
 	"github.com/halimdotnet/grango-tesorow/internal/modules/accounting/dto"
 	"github.com/halimdotnet/grango-tesorow/internal/modules/accounting/repository"
-	pgx "github.com/halimdotnet/grango-tesorow/internal/pkg/postgres"
 )
 
-type accountClassification struct {
+type accountClassificationService struct {
 	accountType repository.AccountTypeRepository
 }
 
-type AccountClassification interface {
+type AccountClassificationService interface {
 	ListAccountType(ctx context.Context) ([]*dto.AccountTypeResponse, error)
 }
 
-func NewAccountClassificationService(db *pgx.DB, accountType repository.AccountTypeRepository) AccountClassification {
-	return &accountClassification{
+func NewAccountClassificationService(accountType repository.AccountTypeRepository) AccountClassificationService {
+	return &accountClassificationService{
 		accountType: accountType,
 	}
 }
 
-func (a *accountClassification) ListAccountType(ctx context.Context) ([]*dto.AccountTypeResponse, error) {
+func (a *accountClassificationService) ListAccountType(ctx context.Context) ([]*dto.AccountTypeResponse, error) {
 	accountTypes, err := a.accountType.List(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("failed to list account types: %w", err)
