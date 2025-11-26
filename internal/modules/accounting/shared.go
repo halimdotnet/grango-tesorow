@@ -16,6 +16,7 @@ type AccountClassification interface {
 
 func NewAccountClassification(db *pgx.DB, log logger.Logger) AccountClassification {
 	accountTypeRepo := repository.NewAccountTypeRepository(db, log)
+	categoryRepo := repository.NewAccountCategoryRepository(db, log)
 
-	return service.NewAccountClassificationService(log, accountTypeRepo)
+	return service.NewAccountClassificationService(log, accountTypeRepo, categoryRepo)
 }

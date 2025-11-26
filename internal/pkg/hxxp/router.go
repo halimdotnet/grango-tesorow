@@ -16,6 +16,13 @@ func (r *Router) Use(middlewares ...func(http.Handler) http.Handler) {
 	r.chi.Use(middlewares...)
 }
 
+func (r *Router) Group(pattern string, fn func(r *Router)) {
+	r.chi.Route(pattern, func(subChi chi.Router) {
+		subRouter := &Router{chi: subChi}
+		fn(subRouter)
+	})
+}
+
 func (r *Router) Get(pattern string, handler HandlerFunc) {
 	r.register(http.MethodGet, pattern, handler)
 }

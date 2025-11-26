@@ -15,18 +15,6 @@ type accountTypeRepository struct {
 	log logger.Logger
 }
 
-type AccountTypeRepository interface {
-	List(ctx context.Context) ([]*domain.AccountType, error)
-	Find(ctx context.Context, code string) (*domain.AccountType, error)
-}
-
-func NewAccountTypeRepository(db *pgx.DB, log logger.Logger) AccountTypeRepository {
-	return &accountTypeRepository{
-		db:  db,
-		log: log,
-	}
-}
-
 func (r *accountTypeRepository) List(ctx context.Context) ([]*domain.AccountType, error) {
 	query := `
         SELECT id, code, name, dc_pattern, 
@@ -47,7 +35,7 @@ func (r *accountTypeRepository) List(ctx context.Context) ([]*domain.AccountType
 	var accountTypes []*domain.AccountType
 	for rows.Next() {
 		accountType := &domain.AccountType{}
-		err := rows.Scan(
+		err = rows.Scan(
 			&accountType.ID,
 			&accountType.Code,
 			&accountType.Name,
@@ -108,4 +96,16 @@ func (r *accountTypeRepository) Find(ctx context.Context, code string) (*domain.
 	}
 
 	return accountType, nil
+}
+
+type AccountTypeRepository interface {
+	List(ctx context.Context) ([]*domain.AccountType, error)
+	Find(ctx context.Context, code string) (*domain.AccountType, error)
+}
+
+func NewAccountTypeRepository(db *pgx.DB, log logger.Logger) AccountTypeRepository {
+	return &accountTypeRepository{
+		db:  db,
+		log: log,
+	}
 }

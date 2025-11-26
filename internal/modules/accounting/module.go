@@ -15,7 +15,10 @@ type Module struct {
 
 func NewModule(db *pgx.DB, router *hxxp.Router, log logger.Logger) *Module {
 	accountTypeRepo := repository.NewAccountTypeRepository(db, log)
-	accountClassificationSvc := service.NewAccountClassificationService(log, accountTypeRepo)
+	categoryRepo := repository.NewAccountCategoryRepository(db, log)
+
+	accountClassificationSvc := service.NewAccountClassificationService(log, accountTypeRepo, categoryRepo)
+
 	accountClassificationHandler := handler.NewAccountClassificationHandler(
 		router,
 		accountClassificationSvc,

@@ -2,7 +2,6 @@ package app
 
 import (
 	"log"
-	"net/http"
 
 	"github.com/halimdotnet/grango-tesorow/internal/pkg/config"
 	"github.com/halimdotnet/grango-tesorow/internal/pkg/hxxp"
@@ -38,22 +37,21 @@ func (a *App) Run() {
 	a.providers()
 	a.modules()
 
-	// test route
-	a.Router.Get("/", func(ctx *hxxp.Context) {
-		ctx.Response(http.StatusOK, hxxp.Response{
-			Error:   false,
-			Message: "Hello World!",
-		})
-	})
-
-	defer func() {
-		if err := a.Logger.Sync(); err != nil {
-			log.Printf("Failed to sync logger on shutdown: %v", err)
-		}
-	}()
+	defer a.cleanup()
 
 	if err := a.Server.RunServer(); err != nil {
 		log.Fatal(err)
 	}
+}
 
+func (a *App) cleanup() {
+	if a.Pg != nil && a.Pg.Sqlx != nil {
+		if err := a.Pg.Sqlx.Close(); err != nil {
+			log.Printf("Failed to close PostgreSQL connection: %v", err)
+		}
+	}
+
+	if a.Logger != nil {
+		defer a.Logger.Sync()
+	}
 }

@@ -99,9 +99,11 @@ func (s *server) BuildRouter() *Router {
 		chi: chi.NewRouter(),
 	}
 
-	s.router.Use(middleware.SetupHeader)
-	s.router.Use(middleware.CORS)
-	s.router.Use(middleware.RateLimiter)
+	s.router.Use(
+		middleware.SetupHeader,
+		middleware.CORS,
+		middleware.RateLimiter,
+	)
 
 	s.router.chi.NotFound(s.router.notFound)
 	s.router.chi.MethodNotAllowed(s.router.methodNotAllowed)
