@@ -56,10 +56,6 @@ func RateLimiter(next http.Handler) http.Handler {
 		}
 
 		w.Header().Set(
-			"Content-Type",
-			"application/json; charset=utf-8",
-		)
-		w.Header().Set(
 			"X-RateLimit-Limit",
 			strconv.FormatInt(context.Limit, 10),
 		)
@@ -77,6 +73,11 @@ func RateLimiter(next http.Handler) http.Handler {
 				"Too Many Requests from %s on %s",
 				ip,
 				r.URL,
+			)
+
+			w.Header().Set(
+				"Content-Type",
+				"application/json; charset=utf-8",
 			)
 
 			w.WriteHeader(http.StatusTooManyRequests)

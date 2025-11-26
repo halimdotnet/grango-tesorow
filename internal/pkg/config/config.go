@@ -7,14 +7,16 @@ import (
 	"github.com/halimdotnet/grango-tesorow/internal/pkg/constants"
 	"github.com/halimdotnet/grango-tesorow/internal/pkg/hxxp"
 	"github.com/halimdotnet/grango-tesorow/internal/pkg/logger"
+	"github.com/halimdotnet/grango-tesorow/internal/pkg/postgres"
 	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 )
 
 type Config struct {
 	Environment string
-	Logger      *logger.Config `mapstructure:"logger"`
-	Server      *hxxp.Config   `mapstructure:"server"`
+	Logger      *logger.Config   `mapstructure:"logger"`
+	Server      *hxxp.Config     `mapstructure:"server"`
+	Postgres    *postgres.Config `mapstructure:"postgres"`
 }
 
 func BindAllConfig() (*Config, error) {

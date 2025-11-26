@@ -3,10 +3,12 @@ package postgres
 import (
 	"errors"
 	"fmt"
+	"log"
 	"sync"
 	"time"
 
 	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 )
 
 type Config struct {
@@ -16,13 +18,13 @@ type Config struct {
 	Password        string        `mapstructure:"password"`
 	DBName          string        `mapstructure:"dbname"`
 	SSLMode         string        `mapstructure:"ssl_mode"`
+	ConnectTimeout  time.Duration `mapstructure:"connect_timeout"`
+	ApplicationName string        `mapstructure:"application_name"`
+
 	MaxOpenConns    int           `mapstructure:"max_open_conns"`
 	MaxIdleConns    int           `mapstructure:"max_idle_conns"`
 	ConnMaxLifetime time.Duration `mapstructure:"conn_max_lifetime"`
 	ConnMaxIdleTime time.Duration `mapstructure:"conn_max_idle_time"`
-
-	ApplicationName string        `mapstructure:"application_name"`
-	ConnectTimeout  time.Duration `mapstructure:"connect_timeout"`
 }
 
 type DB struct {
@@ -30,7 +32,7 @@ type DB struct {
 	mu   sync.RWMutex
 }
 
-func New(cfg *Config) (*DB, error) {
+func Connect(cfg *Config) (*DB, error) {
 	if cfg == nil {
 		return nil, errors.New("postgres config is nil")
 	}
@@ -42,7 +44,7 @@ func New(cfg *Config) (*DB, error) {
 		cfg.DBName,
 		cfg.Password,
 		cfg.SSLMode,
-		cfg.ConnectTimeout*time.Second,
+		cfg.ConnectTimeout,
 	)
 
 	db, err := sqlx.Connect("postgres", dataSourceName)
@@ -52,8 +54,14 @@ func New(cfg *Config) (*DB, error) {
 
 	db.SetMaxOpenConns(cfg.MaxOpenConns)
 	db.SetMaxIdleConns(cfg.MaxIdleConns)
-	db.SetConnMaxLifetime(cfg.ConnMaxLifetime)
-	db.SetConnMaxIdleTime(cfg.ConnMaxIdleTime)
+	db.SetConnMaxLifetime(cfg.ConnMaxLifetime * time.Minute)
+	db.SetConnMaxIdleTime(cfg.ConnMaxIdleTime * time.Minute)
+
+	if err = db.Ping(); err != nil {
+		return nil, fmt.Errorf("failed to connect database: %w", err)
+	}
+
+	log.Println("Connected to postgres database")
 
 	return &DB{Sqlx: db}, nil
 }
