@@ -49,14 +49,14 @@ module "rds" {
 #   key_pair_name          = var.ec2_key_pair_name
 # }
 
-module "alb" {
-  source = "../modules/alb"
-
-  project_name             = var.project_name
-  public_subnet_ids        = module.vpc.public_subnet_ids
-  alb_security_group_id    = module.security_groups.alb_sg_id
-  app_security_group_id    = module.security_groups.app_sg_id
-  app_instance_ids         = []
-  alb_target_group_port    = var.alb_target_group_port
-  alb_listener_port        = var.alb_listener_port
-}
+# module "alb" {
+#   source = "../modules/alb"
+#
+#   project_name             = var.project_name
+#   public_subnet_ids        = module.vpc.public_subnet_ids
+#   alb_security_group_id    = module.security_groups.alb_sg_id
+#   app_security_group_id    = module.security_groups.app_sg_id
+#   app_instance_ids         = []
+#   alb_target_group_port    = var.alb_target_group_port
+#   alb_listener_port        = var.alb_listener_port
+# }

@@ -3,6 +3,7 @@ resource "aws_instance" "app" {
   instance_type          = var.instance_type
   subnet_id              = var.private_subnet_id
   vpc_security_group_ids = [var.app_security_group_id]
+  key_name               = var.key_pair_name != "" ? var.key_pair_name : null
 
   associate_public_ip_address = false
 
