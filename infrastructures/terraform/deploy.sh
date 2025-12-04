@@ -6,9 +6,11 @@ ENVIRONMENT=$1
 COMMAND=$2
 
 if [ -z "$ENVIRONMENT" ] || [ -z "$COMMAND" ]; then
-  echo "Usage: ./deploy.sh [production|staging|development] [plan|apply|destroy]"
+  echo "Usage: ./deploy.sh [production|staging|development] [plan|apply|destroy|init|validate|refresh]"
   echo ""
   echo "Examples:"
+  echo "  ./deploy.sh production init"
+  echo "  ./deploy.sh production validate"
   echo "  ./deploy.sh production plan"
   echo "  ./deploy.sh production apply"
   echo "  ./deploy.sh staging plan"
@@ -16,7 +18,6 @@ if [ -z "$ENVIRONMENT" ] || [ -z "$COMMAND" ]; then
   exit 1
 fi
 
-# Validate environment
 case $ENVIRONMENT in
   production|staging|development)
     ;;
@@ -27,7 +28,6 @@ case $ENVIRONMENT in
     ;;
 esac
 
-# Validate command
 case $COMMAND in
   plan|apply|destroy|init|validate|refresh)
     ;;
@@ -38,7 +38,6 @@ case $COMMAND in
     ;;
 esac
 
-# Change to root directory
 cd "$(dirname "$0")/root"
 
 echo "=========================================="
@@ -47,8 +46,11 @@ echo "Command:     $COMMAND"
 echo "=========================================="
 echo ""
 
-# Run terraform
-terraform $COMMAND -var-file=../environments/$ENVIRONMENT/terraform.tfvars
+if [ "$COMMAND" = "init" ] || [ "$COMMAND" = "validate" ]; then
+  terraform $COMMAND
+else
+  terraform $COMMAND -var-file=../environments/$ENVIRONMENT/terraform.tfvars
+fi
 
 echo ""
 echo "=========================================="

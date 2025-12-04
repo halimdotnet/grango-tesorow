@@ -23,6 +23,10 @@ rds_multi_az              =
 alb_target_group_port = 8080
 alb_listener_port     = 80
 
+ec2_instance_name =
+ec2_instance_type =
+ec2_key_pair_name =
+
 tags = {
   Environment = "production"
   Project     = "tesorow-prod"
