@@ -33,3 +33,6 @@ config.development.yaml
 # Editor/IDE
 .idea/
 .vscode/
+
+#
+.DS_Store
