@@ -101,3 +101,28 @@ variable "alb_target_group_port" {
 variable "alb_listener_port" {
   type = number
 }
+
+variable "github_repo_url" {
+  type = string
+  description = "GitHub repository URL"
+}
+
+variable "github_branch" {
+  type    = string
+  default = "main"
+}
+
+variable "app_port" {
+  type    = number
+  default = 8081
+}
+
+variable "app_runner_cpu" {
+  type    = string
+  default = "0.25"
+}
+
+variable "app_runner_memory" {
+  type    = string
+  default = "512"
+}

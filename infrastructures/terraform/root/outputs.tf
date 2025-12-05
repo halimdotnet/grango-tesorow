@@ -36,6 +36,18 @@ output "rds_master_username" {
   sensitive = true
 }
 
+# output "app_runner_service_url" {
+#   value = module.app_runner.service_url
+# }
+#
+# output "app_runner_service_arn" {
+#   value = module.app_runner.service_arn
+# }
+#
+# output "github_connection_arn" {
+#   value = module.app_runner.connection_arn
+# }
+
 # NOTE: EC2 outputs are commented out due to module being disabled.
 
 # output "ec2_instance_id" {

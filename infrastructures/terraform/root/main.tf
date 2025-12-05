@@ -35,6 +35,28 @@ module "rds" {
   rds_multi_az              = var.rds_multi_az
 }
 
+# module "app_runner" {
+#   source = "../modules/app_runner"
+#
+#   project_name           = var.project_name
+#   github_repo_url        = var.github_repo_url
+#   github_branch          = var.github_branch
+#   app_port               = var.app_port
+#   cpu                    = var.app_runner_cpu
+#   memory                 = var.app_runner_memory
+#   private_subnet_ids     = module.vpc.private_subnet_ids
+#   app_security_group_id  = module.security_groups.app_sg_id
+#
+#   environment_variables = {
+#     APP_ENV                = var.environment
+#     DB_HOST                = split(":", module.rds.db_endpoint)[0]
+#     DB_PORT                = "5432"
+#     DB_USER                = var.rds_master_username
+#     DB_PASSWORD            = var.rds_master_password
+#     DB_NAME                = var.rds_database_name
+#   }
+# }
+
 # NOTE: ALB/NLB module is commented out due to AWS account limitations.
 
 # module "ec2" {
