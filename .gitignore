@@ -36,3 +36,5 @@ config.development.yaml
 
 #
 .DS_Store
+
+terraform-aws/
