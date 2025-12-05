@@ -58,8 +58,15 @@ module "rds" {
   db_security_group_id   = module.security_groups.db_security_group_id
   db_subnet_group_name   = module.vpc.db_subnet_group_name
 
-  
+
   instance_class         = "db.t3.micro"
   allocated_storage      = 20
   backup_retention_period = 7
+}
+
+module "s3" {
+  source = "../../modules/s3"
+
+  environment  = "staging"
+  project_name = "tesorow"
 }

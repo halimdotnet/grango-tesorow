@@ -67,3 +67,18 @@ output "db_secret_name" {
   description = "Database credentials secret name"
   value       = module.rds.db_secret_name
 }
+
+output "documents_bucket_name" {
+  description = "Documents S3 bucket name"
+  value       = module.s3.documents_bucket_name
+}
+
+output "documents_bucket_arn" {
+  description = "Documents S3 bucket ARN"
+  value       = module.s3.documents_bucket_arn
+}
+
+output "logs_bucket_name" {
+  description = "Logs S3 bucket name"
+  value       = module.s3.logs_bucket_name
+}

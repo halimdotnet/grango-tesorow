@@ -64,3 +64,9 @@ module "rds" {
   backup_retention_period = 30
 }
 
+module "s3" {
+  source = "../../modules/s3"
+
+  environment  = "production"
+  project_name = "tesorow"
+}
