@@ -82,3 +82,18 @@ output "logs_bucket_name" {
   description = "Logs S3 bucket name"
   value       = module.s3.logs_bucket_name
 }
+
+# output "alb_dns_name" {
+#   description = "ALB DNS name"
+#   value       = module.alb.alb_dns_name
+# }
+#
+# output "alb_arn" {
+#   description = "ALB ARN"
+#   value       = module.alb.alb_arn
+# }
+#
+# output "target_group_arn" {
+#   description = "Target group ARN"
+#   value       = module.alb.target_group_arn
+# }
