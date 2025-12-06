@@ -32,6 +32,10 @@ func BindAllConfig() (*Config, error) {
 
 	cfg.Environment = env
 
+	if dbPassword := os.Getenv("DB_PASSWORD"); dbPassword != "" {
+		cfg.Postgres.Password = dbPassword
+	}
+
 	return cfg, nil
 }
 
