@@ -97,3 +97,28 @@ output "logs_bucket_name" {
 #   description = "Target group ARN"
 #   value       = module.alb.target_group_arn
 # }
+
+output "ecr_repository_url" {
+  description = "ECR repository URL"
+  value       = module.ecr.repository_url
+}
+
+output "ecr_repository_name" {
+  description = "ECR repository name"
+  value       = module.ecr.repository_name
+}
+
+output "ecs_cluster_name" {
+  description = "ECS cluster name"
+  value       = module.ecs.cluster_name
+}
+
+output "ecs_service_name" {
+  description = "ECS service name"
+  value       = module.ecs.service_name
+}
+
+output "ecs_log_group_name" {
+  description = "ECS CloudWatch log group name"
+  value       = module.ecs.log_group_name
+}

@@ -80,3 +80,29 @@ module "s3" {
 #   public_subnet_ids     = module.vpc.public_subnet_ids
 #   alb_security_group_id = module.security_groups.alb_security_group_id
 # }
+
+module "ecr" {
+  source = "../../modules/ecr"
+
+  environment  = "staging"
+  project_name = "tesorow"
+}
+
+module "ecs" {
+  source = "../../modules/ecs"
+
+  environment             = "staging"
+  project_name            = "tesorow"
+  vpc_id                  = module.vpc.vpc_id
+  public_subnet_ids       = module.vpc.public_subnet_ids
+  app_security_group_id   = module.security_groups.app_security_group_id
+  db_security_group_id    = module.security_groups.db_security_group_id
+  ecr_repository_url      = module.ecr.repository_url
+  task_execution_role_arn = module.iam.ecs_task_execution_role_arn
+  task_role_arn           = module.iam.ecs_task_role_arn
+  db_secret_arn           = module.rds.db_secret_arn
+  
+  cpu           = "256"  # 0.25 vCPU
+  memory        = "512"  # 512 MB
+  desired_count = 1
+}
