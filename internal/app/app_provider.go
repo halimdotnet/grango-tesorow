@@ -22,4 +22,11 @@ func (a *App) providers() {
 
 	a.Server = hxxp.NewServer(a.Config.Server, a.Logger)
 	a.Router = a.Server.BuildRouter()
+
+	// TODO
+	a.Router.Get("/health", func(ctx *hxxp.Context) {
+		ctx.Response(200, hxxp.Response{
+			Message: "OK",
+		})
+	})
 }
